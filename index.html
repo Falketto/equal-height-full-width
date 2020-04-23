@@ -1,0 +1,42 @@
+<div width="100%">
+    <div id="img1container" style="float: left;">
+        <img id="img1" style="padding-right: 3%; width: 100%;" src="xy.jpg" alt="">
+    </div>
+    <div id="img2container" style="float: left;">
+        <img id="img2" style="padding-left: 3%; width: 100%;" src="xz.jpg" alt="">
+    </div>
+</div>
+
+<script>
+    let img1 = $('#img1');
+    let img2 = $('#img2');
+    const promise1 = new Promise((res, rej) => {
+        img1.load(() => {
+            let ratio = calcRatio(img1[0].height, img1[0].width);
+            res(ratio);
+        })
+    })
+    const promise2 = new Promise((res, rej) => {
+        img2.load(() => {
+            let ratio = calcRatio(img2[0].height, img2[0].width);
+            res(ratio);
+        })
+    })
+    function calcWidth(height, ratio) {
+        return ratio * height;
+    }
+    function calcRatio(a, b) {
+        return a / b;
+    }
+    async function set() {
+        let ratio1 = await promise1;
+        let ratio2 = await promise2;
+        let tempWidth1 = calcWidth(ratio1, 100);
+        let tempWidth2 = calcWidth(ratio2, 100);
+        let widthRatio = calcRatio(tempWidth1, tempWidth1 + tempWidth2) * 100;
+        let widthRatio2 = 100 - widthRatio;
+        $(img2container).css('width', `${widthRatio}%`);
+        $(img1container).css('width', `${widthRatio2}%`);
+    }
+    set();
+</script>
